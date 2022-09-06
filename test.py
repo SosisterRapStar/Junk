@@ -1,2 +1,3 @@
-t = [1, 2, 3, 4, 5, 6, 6]
-print(t[-4:])
+t = '1'
+if type(t) == int:
+    print(t)
