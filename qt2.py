@@ -1,40 +1,61 @@
-class RadiusVector2D:
-    MIN_COORD = -100
-    MAX_COORD = 1024
 
-    def __init__(self, x=0, y=0):
-        if (isinstance(x, float) or isinstance(x, int)) and (self.MIN_COORD <= x <= self.MAX_COORD):
-            self.__x = x
+class DecisionTree:
+    @classmethod
+    def predict(cls, root, x):
+        if x[0] == 1:
+            root = root.left
         else:
-            self.__x = 0
-        if (isinstance(y, float) or isinstance(y, int)) and (self.MIN_COORD <= y <= self.MAX_COORD):
-            self.__y = y
+            root = root.right
+        if x[root.indx] == 0:
+            root = root.right
         else:
-            self.__y = 0
+            root = root.left
+        return root.value
+
+    @classmethod
+    def add_obj(cls, obj, node=None, left=True):
+        if node != None:
+            if left == True:
+                node.left = obj
+
+            else:
+                node.right = obj
+        return obj
+
+
+# описание класса узла
+class TreeObj:
+    def __init__(self, indx, value=None):
+        self.indx = indx  # индекс закрепленный за деревом
+        self.value = value  # строка
+        self.__left = None
+        self.__right = None
 
     @property
-    def x(self):
-        return self.__x
+    def left(self):
+        return self.__left  # где значение - сслыка на объект
 
-    @x.setter
-    def x(self, number):
-        if isinstance(number, float) or isinstance(number, int):
-            if self.MIN_COORD < number < self.MAX_COORD:
-                self.__x = number
+    @left.setter
+    def left(self, obj):
+        self.__left = obj
 
     @property
-    def y(self):
-        return self.__y
+    def right(self):
+        return self.__right
 
-    @y.setter
-    def y(self, number):
-        if isinstance(number, float) or isinstance(number, int):
-            if self.MIN_COORD < number < self.MAX_COORD:
-                self.__y = number
-
-    def norm2(vector):
-        return vector.x ** 2 + vector.y ** 2
+    @right.setter
+    def right(self, obj):
+        self.__right = obj
 
 
-r = RadiusVector2D(-101, 1025)
-print(r.x)
+root = DecisionTree.add_obj(TreeObj(0))
+v_11 = DecisionTree.add_obj(TreeObj(1), root)
+v_12 = DecisionTree.add_obj(TreeObj(2), root, False)
+DecisionTree.add_obj(TreeObj(-1, "будет программистом"), v_11)
+DecisionTree.add_obj(TreeObj(-1, "будет кодером"), v_11, False)
+DecisionTree.add_obj(TreeObj(-1, "не все потеряно"), v_12)
+DecisionTree.add_obj(TreeObj(-1, "безнадежен"), v_12, False)
+
+x = [1, 1, 0]
+res = DecisionTree.predict(root, x)  # будет программистом
+print(res)
