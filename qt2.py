@@ -1,61 +1,75 @@
-
-class DecisionTree:
-    @classmethod
-    def predict(cls, root, x):
-        if x[0] == 1:
-            root = root.left
+# односвязный список
+class StackObj:
+    def __init__(self, data, next=None):
+        self.__data = data
+        if isinstance(next, StackObj):
+            self.__next = next
         else:
-            root = root.right
-        if x[root.indx] == 0:
-            root = root.right
-        else:
-            root = root.left
-        return root.value
-
-    @classmethod
-    def add_obj(cls, obj, node=None, left=True):
-        if node != None:
-            if left == True:
-                node.left = obj
-
-            else:
-                node.right = obj
-        return obj
-
-
-# описание класса узла
-class TreeObj:
-    def __init__(self, indx, value=None):
-        self.indx = indx  # индекс закрепленный за деревом
-        self.value = value  # строка
-        self.__left = None
-        self.__right = None
+            self.__next = None
 
     @property
-    def left(self):
-        return self.__left  # где значение - сслыка на объект
+    def next(self):
+        return self.__next
 
-    @left.setter
-    def left(self, obj):
-        self.__left = obj
+    @next.setter
+    def next(self, next):
+        if isinstance(next, StackObj) or next is None:
+            self.__next = next
 
     @property
-    def right(self):
-        return self.__right
+    def data(self):
+        return self.__data
 
-    @right.setter
-    def right(self, obj):
-        self.__right = obj
+    @data.setter
+    def data(self, data):
+        self.__data = data
 
 
-root = DecisionTree.add_obj(TreeObj(0))
-v_11 = DecisionTree.add_obj(TreeObj(1), root)
-v_12 = DecisionTree.add_obj(TreeObj(2), root, False)
-DecisionTree.add_obj(TreeObj(-1, "будет программистом"), v_11)
-DecisionTree.add_obj(TreeObj(-1, "будет кодером"), v_11, False)
-DecisionTree.add_obj(TreeObj(-1, "не все потеряно"), v_12)
-DecisionTree.add_obj(TreeObj(-1, "безнадежен"), v_12, False)
+class Stack:
+    def __init__(self, top=None):
+        self.top = top
 
-x = [1, 1, 0]
-res = DecisionTree.predict(root, x)  # будет программистом
+    def push(self, obj):
+        if self.top is None:
+            self.top = obj
+        else:
+            node = self.top
+            while node.next is not None:
+                node = node.next
+            node.next = obj
+
+    def pop(self):
+        if self.top is not None:
+            if self.top.next is None:
+                r = self.top
+                self.top = self.top.next
+                return r
+
+            node = self.top
+            node_prev = self.top
+            while node.next is not None:
+                node_prev = node
+                node = node.next
+            node_prev.next = None
+            return node
+
+    def get_data(self):
+        if self.top is None:
+            return []
+        output_list = []
+        node = self.top
+        while node.next is not None:
+            output_list.append(node.data)
+            node = node.next
+        output_list.append(node.data)
+        return output_list
+
+
+st = Stack()
+st.push(StackObj("obj1"))
+st.push(StackObj("obj1"))
+st.push(StackObj("obj1"))
+
+print(st.pop())
+res = st.get_data()    # ['obj1', 'obj2']
 print(res)
