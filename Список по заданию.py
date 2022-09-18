@@ -5,7 +5,7 @@ class Node:
         self.prev_node = prev_node
 
 
-class LinkedList: # Интерфейс управления списками и узлами
+class LinkedList: # Интерфейс управления списками
     def __init__(self, tail=None, head=None):
         self.tail = tail
         self.head = head
